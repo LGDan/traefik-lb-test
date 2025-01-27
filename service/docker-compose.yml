@@ -1,0 +1,31 @@
+services:
+  nginx1:
+    image: nginx:1.19.1
+    volumes:
+      - ./nginx1:/usr/share/nginx/html
+    networks:
+      - traefik-ingress
+    expose:
+      - 80
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.nginx1.rule=Host(`nginx1.local`)'
+      - 'traefik.http.routers.nginx1.entrypoints=http'
+
+  nginx2:
+    image: nginx:1.19.1
+    volumes:
+      - ./nginx2:/usr/share/nginx/html
+    networks:
+      - traefik-ingress
+    expose:
+      - 80
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.nginx2.rule=Host(`nginx2.local`)'
+      - 'traefik.http.routers.nginx2.entrypoints=http'
+
+networks:
+  traefik-ingress:
+    external: true
+    name: traefik-ingress

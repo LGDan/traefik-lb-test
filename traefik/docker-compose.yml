@@ -1,0 +1,31 @@
+services:
+  ingress:
+    image: traefik:v3.3.2
+    ports:
+      - 80:80
+    networks:
+      - traefik-ingress
+    volumes:
+      - ./dynamic:/dynamic
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.rule=Host(`traefik.local`)'
+      - 'traefik.http.routers.api.entrypoints=http'
+      - 'traefik.http.routers.api.service=api@internal'
+    command:
+      - '--api'
+      - '--api.insecure=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedByDefault=false'
+      - '--providers.file.directory=/dynamic'
+      - '--providers.file.watch=true'
+      - '--entrypoints.http=true'
+      - '--entrypoints.http.address=:80'
+      - '--log=true'
+      - '--log.level=DEBUG'
+
+networks:
+  traefik-ingress:
+    external: false
+    name: traefik-ingress

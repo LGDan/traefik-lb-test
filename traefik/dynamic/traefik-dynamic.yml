@@ -1,0 +1,16 @@
+http:
+  routers:
+    routerProd:
+      service: app_prod
+      rule: "HostRegexp(`nginx\.local`)"
+  services:
+    app_prod:
+      weighted:
+        sticky:
+          cookie:
+            name: lvl1
+        services:
+          - name: nginx1-test-systems@docker
+            weight: 95
+          - name: nginx2-test-systems@docker
+            weight: 5
